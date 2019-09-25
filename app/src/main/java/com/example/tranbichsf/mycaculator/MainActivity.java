@@ -120,7 +120,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 textView.setText("Invalid");
             }
-        } else if (id == R.id.btnEqual) {
+        } else if(id==R.id.btnDot) {
+            changeState(9);
+        }  else if (id == R.id.btnEqual) {
             calculateResult();
         } else if (id == R.id.btnCE) {
             // Xoa toan hang hien tai
@@ -198,7 +200,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             result = Math.pow(op1, 2);
         else if (op == 8)
             result = 1 / op1;
-
+        else if (op == 9)
+            result = op1/10;
         textView.setText(Double.toString(result));
 
         state = 2;
