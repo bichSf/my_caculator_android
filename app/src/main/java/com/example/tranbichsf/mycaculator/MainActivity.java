@@ -4,16 +4,19 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.text.Html;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView textView;
     TextView textViewResult;
     EditText editText;
+    Button button;
 
     int state;  // trang thai 1: nhap op1, 2: nhap op2
-    int op1, op2;   // 2 toan hang
+    double op1, op2;   // 2 toan hang
     int op;     // toan tu, 1: add, 2: sub, 3: mul, 4: div
 
     @Override
@@ -23,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         textView = findViewById(R.id.textView);
         textViewResult = findViewById(R.id.oldtextView);
+        button = findViewById(R.id.btnPow);
+        button.setText(Html.fromHtml("x<sup>2</sup>"));
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "DS-DIGI.TTF");
         textView.setTypeface(tf);
@@ -99,18 +104,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             changeState(5);
             textViewResult.append(" %");
         } else if (id == R.id.btnSqrt) {
-            textViewResult.setText("√");
+            textViewResult.setText(Html.fromHtml("√(" + op1 + ")"));
             if (op1 > 0) {
                 changeState(6);
             } else {
-                textView.setText("Invalid input");
+                textView.setText("Invalid");
             }
         } else if (id == R.id.btnPow) {
             changeState(7);
-            textViewResult.append(" : ");
+            textViewResult.setText(Html.fromHtml(op1 + "<sup>2</sup>"));
         } else if (id == R.id.btnInverse) {
-            changeState(8);
-            textViewResult.append(" : ");
+            if (op1 != 0) {
+                changeState(8);
+                textViewResult.setText(Html.fromHtml("1/" + op1));
+            } else {
+                textView.setText("Invalid");
+            }
         } else if (id == R.id.btnEqual) {
             calculateResult();
         } else if (id == R.id.btnCE) {
@@ -140,11 +149,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void removeDigit() {
         if (state == 1) {
             op1 = op1 / 10;
+            textView.setText(String.valueOf((int)op1));
+        } else if (state == 2) {
             textView.setText(String.valueOf(op1));
         } else {
             op2 = op2 / 10;
-            textView.setText(String.valueOf(op2));
+            textView.setText(String.valueOf((int)op2));
         }
+
     }
 
     private void clearOperand() {
@@ -166,6 +178,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void calculateResult() {
         double result = 0;
+        if (op == 0) {
+            if (op2 == 0) result = op1;
+            else result = op2;
+        }
         if (op == 1)
             result = op1 + op2;
         else if (op == 2)
@@ -185,9 +201,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         textView.setText(Double.toString(result));
 
-        state = 1;
-        op1 = 0;
+        state = 2;
+        op1 = result;
         op2 = 0;
+        op = 0;
         textViewResult.setText("");
     }
 

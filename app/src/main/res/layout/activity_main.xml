@@ -23,6 +23,7 @@
         android:gravity="center_vertical|right"
         android:padding="10dp"
         android:text="0"
+        android:maxLines="1"
         android:textSize="100sp"/>
 
     <LinearLayout
@@ -51,7 +52,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="x2"
             android:textSize="36sp"/>
 
         <Button
